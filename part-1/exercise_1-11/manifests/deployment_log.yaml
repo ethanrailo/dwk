@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: log-output-dep
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: log-output
+  template:
+    metadata:
+      labels:
+        app: log-output
+    spec:
+      volumes:
+        - name: shared-vol
+          persistentVolumeClaim:
+            claimName: sv-claim
+      containers:
+        - name: log-output-writer
+          image: ethanrailo/log-output-writer:version1.0
+          volumeMounts:
+            - name: shared-vol
+              mountPath: /usr/src/app/files
+          env:
+            - name: PYTHONUNBUFFERED
+              value: "1"
+            - name: LOGFILE_PATH
+              value: "/usr/src/app/files/log-output.txt"
+        - name: log-output-reader
+          image: ethanrailo/log-output-reader:version1.1
+          volumeMounts:
+            - name: shared-vol
+              mountPath: /usr/src/app/files
+          env:
+            - name: PYTHONUNBUFFERED
+              value: "1"
+            - name: PORT
+              value: "3000"
+            - name: LOGFILE_PATH
+              value: "/usr/src/app/files/log-output.txt"
+            - name: PINGPONG_PATH
+              value: "/usr/src/app/files/pingpong-output.txt"

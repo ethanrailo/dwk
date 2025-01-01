@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pingpong-dep
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pingpong
+  template:
+    metadata:
+      labels:
+        app: pingpong
+    spec:
+      volumes:
+        - name: shared-vol
+          persistentVolumeClaim:
+            claimName: sv-claim
+      containers:
+        - name: pingpong
+          image: ethanrailo/pingpong:version1.1
+          volumeMounts:
+            - name: shared-vol
+              mountPath: /usr/src/app/files
+          env:
+            - name: PYTHONUNBUFFERED
+              value: "1"
+            - name: PORT
+              value: "3000"
+            - name: PINGPONG_PATH
+              value: "/usr/src/app/files/pingpong-output.txt"
