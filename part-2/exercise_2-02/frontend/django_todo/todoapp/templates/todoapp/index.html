@@ -1,0 +1,32 @@
+{% load static %}
+<!doctype html>
+<html lang="en-US">
+
+<head>
+    <meta charset="utf-8" />
+    <title>My awesome todo-app</title>
+    <script src="{% static 'todoapp/todo.js' %}"></script>
+</head>
+
+<body>
+    <img src="{% url 'get_image' %}" alt="Random Image">
+    <p>Todo-app</p>
+    <div id="todo-list">
+    </div>
+
+
+    <form id="todo_form">
+        <fieldset>
+            <input type="text" name="todo_text" maxlength="140" size="60">
+        </fieldset>
+        <input type="submit" value="Create TODO">
+    </form>
+
+    <p><a href="{% url 'quit' %}">Shutdown container OS</a></p>
+    <script type="text/javascript">
+        init();
+    </script>
+
+</body>
+
+</html>

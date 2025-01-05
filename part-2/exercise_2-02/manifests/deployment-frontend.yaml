@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dwk-project-fe-dep
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dwk-project-fe
+  template:
+    metadata:
+      labels:
+        app: dwk-project-fe
+    spec:
+      volumes:
+        - name: shared-vol
+          persistentVolumeClaim:
+            claimName: dwk-project-volume-claim
+      containers:
+        - name: dwk-project-frontend
+          image: ethanrailo/dwk-project-frontend:version1.0
+          volumeMounts:
+            - name: shared-vol
+              mountPath: /usr/src/app/files
+          env:
+            - name: PYTHONUNBUFFERED
+              value: "1"
+            - name: PORT
+              value: "3000"
+            - name: IN_CONTAINER
+              value: "1"

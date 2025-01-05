@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dwk-project-be-dep
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dwk-project-be
+  template:
+    metadata:
+      labels:
+        app: dwk-project-be
+    spec:
+      containers:
+        - name: dwk-project-backend
+          image: ethanrailo/dwk-project-backend:version1.0
+          env:
+            - name: PYTHONUNBUFFERED
+              value: "1"
+            - name: PORT
+              value: "3001"
+            - name: IN_CONTAINER
+              value: "1"
