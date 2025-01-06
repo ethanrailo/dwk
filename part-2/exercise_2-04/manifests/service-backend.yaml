@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: dwk-project-backend-svc
+  namespace: dwk-project
+spec:
+  type: ClusterIP
+  selector:
+    app: dwk-project-be
+  ports:
+    - port: 2348
+      protocol: TCP
+      targetPort: 3001
