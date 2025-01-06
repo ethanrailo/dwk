@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: dwk-project
+  name: dwk-project-configmap
+data:
+  PSQL_HOST: "dwk-project-db-svc"
+  PSQL_DBNAME: "postgres"
+  PSQL_USER: "postgres"
+  PSQL_PORT: "5432"
