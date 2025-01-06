@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: dwk-exercises
+  name: log-output-reader-configmap
+data:
+  MESSAGE: "hello world"
+  information.txt: |
+    this text is from file and just changed

@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: dwk-exercises
+  name: log-output-dep
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: log-output
+  template:
+    metadata:
+      labels:
+        app: log-output
+    spec:
+      volumes:
+        - name: shared-vol
+          persistentVolumeClaim:
+            claimName: sv-claim
+        - name: config
+          configMap:
+            name: log-output-reader-configmap
+            items:
+              - key: "information.txt"
+                path: "information.txt"
+      containers:
+        - name: log-output-writer
+          image: ethanrailo/log-output-writer:version1.0
+          volumeMounts:
+            - name: shared-vol
+              mountPath: /usr/src/app/files
+          env:
+            - name: PYTHONUNBUFFERED
+              value: "1"
+            - name: LOGFILE_PATH
+              value: "/usr/src/app/files/log-output.txt"
+        - name: log-output-reader
+          image: ethanrailo/log-output-reader:version1.41
+          volumeMounts:
+            - name: shared-vol
+              mountPath: /usr/src/app/files
+            - name: config
+              mountPath: "/usr/src/app/config"
+              readOnly: true
+          env:
+            - name: PYTHONUNBUFFERED
+              value: "1"
+            - name: PORT
+              value: "3000"
+            - name: LOGFILE_PATH
+              value: "/usr/src/app/files/log-output.txt"
+            - name: PINGPONG_URL
+              value: "http://pingpong-svc:2347/pingpong/count"
+            - name: MESSAGE
+              valueFrom:
+                configMapKeyRef:
+                  name: log-output-reader-configmap
+                  key: MESSAGE
