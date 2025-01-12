@@ -23,9 +23,10 @@ def main():
     response = create_todo("Read {}".format(article_url))
 
     if response.status_code == 200:
-        print("Todo created successful!")
+        print("Todo created successfully!")
     else:
-        print("Error occured while creating todo")
+        print(f"Error occured while creating todo, error {response.status_code}")
+        #print(response.text)
 
 if __name__=="__main__":
     main()

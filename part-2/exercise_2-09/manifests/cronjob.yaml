@@ -11,8 +11,8 @@ spec:
         spec:
           containers:
             - name: todo-creator
-              image: ethanrailo/todo-creator:version1.0
+              image: ethanrailo/todo-creator:version1.01
               env:
                 - name: TODO_URL
-                  value: "http://localhost:8081/todos/"
+                  value: "http://dwk-project-backend-svc.dwk-project:2348/todos/"
           restartPolicy: OnFailure
