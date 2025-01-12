@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: pingpong-db-stset
+spec:
+  serviceName: pingpong-db-svc
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pingpong-db
+  template:
+    metadata:
+      labels:
+        app: pingpong-db
+    spec:
+      containers:
+        - name: pingpong-db
+          image: ethanrailo/pingpong-db:version1.0
+          env:
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: dwk-exercises-postgres-password
+                  key: PSQL_PASSWORD
+            - name: PGDATA
+              value: "/dbdata"
+          ports:
+            - name: postgres
+              containerPort: 5432
+          volumeMounts:
+            - name: postgres-data-storage
+              mountPath: /dbdata
+              subPath: postgres
+  volumeClaimTemplates:
+    - metadata:
+        name: postgres-data-storage
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 100Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pingpong-db-svc
+spec:
+  ports:
+    - port: 5432
+      name: postgres
+  clusterIP: None
+  selector:
+    app: pingpong-db

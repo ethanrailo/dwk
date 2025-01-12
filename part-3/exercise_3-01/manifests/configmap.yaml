@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: pingpong-configmap
+data:
+  PSQL_HOST: "pingpong-db-svc"
+  PSQL_DBNAME: "postgres"
+  PSQL_USER: "postgres"
