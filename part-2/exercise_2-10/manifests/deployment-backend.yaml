@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dwk-project-be-dep
+  namespace: dwk-project
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dwk-project-be
+  template:
+    metadata:
+      labels:
+        app: dwk-project-be
+    spec:
+      containers:
+        - name: dwk-project-backend
+          image: ethanrailo/dwk-project-backend:version1.33
+          env:
+            - name: PYTHONUNBUFFERED
+              value: "1"
+            - name: PORT
+              value: "3001"
+            - name: IN_CONTAINER
+              value: "1"
+            - name: DJANGO_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: dwk-project-django-secret-key
+                  key: DJANGO_SECRET_KEY
+            - name: PSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: dwk-project-postgres-password
+                  key: PSQL_PASSWORD
+          envFrom:
+            - configMapRef:
+                name: dwk-project-configmap
